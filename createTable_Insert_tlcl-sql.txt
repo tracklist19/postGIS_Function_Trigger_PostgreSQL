@@ -1,4 +1,4 @@
-jay@jay-Satellite-C650:~$ psql -U postgres -d postgis_sql
+xxxxx@yyyyy:~$ psql -U postgres -d postgis_sql
 psql (13.1 (Ubuntu 13.1-1.pgdg20.04+1))
 Type "help" for help.
 
