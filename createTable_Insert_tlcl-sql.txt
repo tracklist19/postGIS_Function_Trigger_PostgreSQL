@@ -1,0 +1,22 @@
+jay@jay-Satellite-C650:~$ psql -U postgres -d postgis_sql
+psql (13.1 (Ubuntu 13.1-1.pgdg20.04+1))
+Type "help" for help.
+
+
+
+-- if table already exists: 
+postgis_sql=# DROP TABLE IF EXISTS ppoi_postgis_25833; 
+DROP TABLE 
+
+
+-- create: 
+postgis_sql=# CREATE TABLE ppoi_postgis_25833 ("ID" INTEGER PRIMARY KEY, address VARCHAR(40), geom GEOMETRY(POINT, 25833)); 
+CREATE TABLE
+
+
+-- insert + makePoint: 
+postgis_sql=# INSERT INTO ppoi_postgis_25833("ID", address, geom) VALUES (1, 'Ederstr_24', ST_SetSRID(ST_MakePoint(395098.517923233564943, 5815344.281443133018911), 25833));
+INSERT 0 1
+postgis_sql=# INSERT INTO ppoi_postgis_25833("ID", address, geom) VALUES (2, 'Weisestr_2', ST_SetSRID(ST_MakePoint(392901.898330981261097, 5815612.682892174459994), 25833)); 
+INSERT 0 1
+postgis_sql=# 
