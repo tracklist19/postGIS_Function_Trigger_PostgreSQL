@@ -3,7 +3,7 @@
 
 -- Funktion, die als Parameter den Namen einer Stadt bekommt und die X- und Y-Koordinate ausgibt 
 CREATE OR REPLACE FUNCTION koordinatenAusgeben(stadt character)    		-- or 'text'
-RETURNS text                           									-- or 'character'
+RETURNS text                           						-- or 'character'
 AS 
 $$
 SELECT city_name || ': ' || ST_Y(geom) || ', ' || ST_X(geom)
@@ -28,10 +28,10 @@ AS
 $$
 BEGIN 
 UPDATE cities SET lat=ST_Y(geom), lon=ST_X(geom) WHERE gid=NEW.gid;     -- nur neu-hinzugefügte
-RETURN NULL;                                         					-- nichts wird zurückgegeben
+RETURN NULL;                                         			-- nichts wird zurückgegeben
 END; 
 $$
-LANGUAGE plpgsql;														-- SQL-Dialekt : PL/SQL (Procedural Language/Structured Query Language) = prozedurale Programmiersprache => gibt auch objektorientierte
+LANGUAGE plpgsql;							-- SQL-Dialekt : PL/SQL (Procedural Language/Structured Query Language) = prozedurale Programmiersprache => gibt auch objektorientierte
 
 
 -- INSERT Trigger erstellen 
@@ -41,7 +41,7 @@ LANGUAGE plpgsql;														-- SQL-Dialekt : PL/SQL (Procedural Language/Stru
 
 CREATE TRIGGER koordinaten_insert_trigger
 AFTER INSERT ON cities 
-FOR EACH ROW                                       						-- für jede Zeile ein FunktionsAufruf
+FOR EACH ROW                                       			-- für jede Zeile ein FunktionsAufruf
 EXECUTE PROCEDURE update_x_and_y(); 
 
 
