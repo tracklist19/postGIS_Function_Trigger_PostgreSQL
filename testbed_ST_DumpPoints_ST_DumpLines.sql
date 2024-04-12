@@ -19,7 +19,6 @@
 	SELECT * FROM dpdl ; 
 
 
-
 -- Linien extrahieren 
 
 	-- ST_DumpSegments : erst ab PostGIS 3.2.0
@@ -34,7 +33,7 @@
 		-- Punkte extrahieren : ST_DumpPoints 
 			CREATE TEMP TABLE dumped_points AS
 				SELECT id, typ, geom
-					, (ST_DumpPoints(geom)).path path_point 			-- For a (Multi-)POLYGON the paths are {(h,)i,j} where (h is the Number of the MultiPolygon-Part,) i is the ring number (1 is outer; inner rings follow) and j is the coordinate position in the ring. 
+					, (ST_DumpPoints(geom)).path path_point 				-- For a (Multi-)POLYGON the paths are {(h,)i,j} where (h is the Number of the MultiPolygon-Part,) i is the ring number (1 is outer; inner rings follow) and j is the coordinate position in the ring. 
 					, (ST_DumpPoints(geom)).geom geom_point 	
 					FROM dpdl ) 
 
