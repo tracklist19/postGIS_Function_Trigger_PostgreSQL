@@ -44,7 +44,7 @@ SELECT ST_IsEmpty(ST_Multi(ST_Buffer(ST_GeomFromText('POINT(1 1)'), -1.0)))
 
 	--> Leere Geometrien werden ignoriert/nicht gedumped 
 		--> Leere MultiGeometrie-Parts werden hingegen gedumped, allerdings nur falls sich zusätzl.noch notEmpty MultiGeometrie-Parts in der MultiGeometrie befinden 
-				-- (Nur aus einem leeren MultiGeometrie-Part bestehende MultiGeometrien werden ebenso ignoriert/nicht gedumpt) 
+			-- (Nur aus einem leeren MultiGeometrie-Part bestehende MultiGeometrien werden ebenso ignoriert/nicht gedumpt) 
 	--> notValide Geometrien werden in den Dump übernommen 
 
 	WITH dumped_geom AS (
