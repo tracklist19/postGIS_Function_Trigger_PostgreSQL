@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- IMPORT : Moor_OEzg --
+--  IMPORT : Moor_OEzg  --
 ------------------------------------------------------------------------
 
 
@@ -42,7 +42,7 @@ GRANT SELECT ON TABLE fos_moor_pruef TO ausk_isk ;
 CREATE INDEX fos_moor_pruef_idx_geom ON fos_moor_pruef USING GIST (geom) ; 
 CREATE INDEX fos_moor_pruef_idx_nr   ON fos_moor_pruef (nr) ; 
 
-COMMENT ON TABLE fos_moor_pruef IS 'Moorkörper und deren OberflächenEinzugsgebiete [OEzg] ; QuellDaten: xxxxxx
+COMMENT ON TABLE fos_moor_pruef IS 'Moorkörper und deren OberflächenEinzugsgebiete [OEzg] ; QuellDaten: xxxxxx'
 	COMMENT ON COLUMN fos_moor_pruef.gid IS 'Fortlaufende Identifikationsnummer'	; 
 	COMMENT ON COLUMN fos_moor_pruef.nr IS 'Eindeutige Zuordnung der OberflächenEinzugsgebiete [oezg=x] und OEzg-Moor-Paare [JOIN oezg, moorkorper ON nr]'	; 
 	COMMENT ON COLUMN fos_moor_pruef.name IS 'Name des Moorkörpers' ; 
@@ -59,9 +59,9 @@ COMMENT ON TABLE fos_moor_pruef IS 'Moorkörper und deren OberflächenEinzugsgeb
 -- INSERT 		: 		Test-INSERT erfolgreich ? : JA 
 
 
-INSERT INTO fos_moor_pruef ( nr , name , landkreis , waldumbau , landeswald , nadelwald , a_qm									      		  , moorkorper , oezg , geom ) 
-					SELECT   nr , name , landkreis , waldumbau , landeswald , nadelwald , TRUNC(ST_Area(moor_oezg_cor.geom)::numeric(20,8),6) , moorkorper , oezg , geom
-							FROM moor_oezg_cor ; 
+INSERT INTO fos_moor_pruef ( nr , name , landkreis , waldumbau , landeswald , nadelwald , a_qm						      , moorkorper , oezg , geom ) 
+		    SELECT   nr , name , landkreis , waldumbau , landeswald , nadelwald , TRUNC(ST_Area(moor_oezg_cor.geom)::numeric(20,8),6) , moorkorper , oezg , geom
+		    	FROM moor_oezg_cor ; 
 
 
 -------------------------------------------------------------------------------------------------
@@ -70,15 +70,13 @@ INSERT INTO fos_moor_pruef ( nr , name , landkreis , waldumbau , landeswald , na
 		SELECT * FROM fos_moor_pruef ; 
 
 	-- Anzahl_Datensätze  
-		SELECT (SELECT COUNT(*) FROM moor_oezg_cor) = (SELECT COUNT(*) FROM fos_moor_pruef) ; 
-				-- 1096 
+		SELECT (SELECT COUNT(*) FROM moor_oezg_cor) = (SELECT COUNT(*) FROM fos_moor_pruef) ; 	-- 1096 
 	-- FlächeSumme  
 		SELECT SUM(ST_Area(geom)) FROM moor_oezg_cor ; 		-- 1011331245.6162598 
 		SELECT SUM(ST_Area(geom)) FROM fos_moor_pruef ; 	-- 1011331245.6162596		--> Abweichung: 0,2qmm 
 				
 	--> Geometrie-Prüfung 
-		SELECT DISTINCT ST_GeometryType(geom), 
-				   ST_IsSimple(geom), ST_IsEmpty(geom), ST_IsValid(geom), ST_IsValidReason(geom) 
+		SELECT DISTINCT ST_GeometryType(geom), ST_IsSimple(geom), ST_IsEmpty(geom), ST_IsValid(geom), ST_IsValidReason(geom) 
 				FROM fos_moor_pruef ; 				
 
 
