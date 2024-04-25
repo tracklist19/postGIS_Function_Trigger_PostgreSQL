@@ -14,12 +14,12 @@
 		 , ST_AsTExt(ST_RemoveRepeatedPoints(geom)) ST_RemoveRepeatedPoints
 		FROM (
 			VALUES  (ST_GeomFromText('POINT(1 1)')), 
-				    (ST_GeomFromText('POINT(1 1)')),															-- Entfernt identischen Punkt in anderem Datensatz nicht 
-					(ST_GeomFromText('MULTIPOINT(1 1, 1 1)')), 													-- Entfernt identischen MultiPunkt-Part  
-					(ST_GeomFromText('LINESTRING(1 1, 1 1, 2 2, 3 3)')), 										-- Entfernt identischen Punkt innerhalb einer Linie  
-					(ST_GeomFromText('MULTILINESTRING((1 1, 1 1, 2 2, 3 3), (4 4, 5 5), (4 4, 5 5))')), 		-- Entfernt identischen Punkt innerhalb eines MultiLine-Parts, nicht einen identischen MultiLine-Part in Gänze 
-					(ST_GeomFromText('POLYGON((1 1, 1 1, 2 1, 2 2, 1 2, 1 1))')), 								-- Entfernt identischen Punkt innerhalb eines MultiPolygon-Parts, 
-					(ST_GeomFromText('MULTIPOLYGON(((1 1, 2 1, 2 2, 1 2, 1 1)), ((1 1, 2 1, 2 2, 1 2, 1 1)))')) -- nicht einen identischen MultiPolygon-Part in Gänze 
+				    (ST_GeomFromText('POINT(1 1)')),											-- Entfernt identischen Punkt in anderem Datensatz nicht 
+					(ST_GeomFromText('MULTIPOINT(1 1, 1 1)')), 									-- Entfernt identischen MultiPunkt-Part  
+					(ST_GeomFromText('LINESTRING(1 1, 1 1, 2 2, 3 3)')), 								-- Entfernt identischen Punkt innerhalb einer Linie  
+					(ST_GeomFromText('MULTILINESTRING((1 1, 1 1, 2 2, 3 3), (4 4, 5 5), (4 4, 5 5))')), 				-- Entfernt identischen Punkt innerhalb eines MultiLine-Parts, nicht einen identischen MultiLine-Part in Gänze 
+					(ST_GeomFromText('POLYGON((1 1, 1 1, 2 1, 2 2, 1 2, 1 1))')), 							-- Entfernt identischen Punkt innerhalb eines Polygons/MultiPolygon-Parts, 
+					(ST_GeomFromText('MULTIPOLYGON(((1 1, 1 1, 2 1, 2 2, 1 2, 1 1)), ((1 1, 2 1, 2 2, 1 2, 1 1)), ((1 1, 2 1, 2 2, 1 2, 1 1)))')) -- nicht einen identischen MultiPolygon-Part in Gänze
 			) poi (geom)
 
 
@@ -64,21 +64,21 @@
 		WITH dumped_points AS (
 		-- Punkte dumpen 
 		SELECT id, typ  
-			, (ST_DumpPoints(geom)).path path_point 			-- For a (Multi-)POLYGON the paths are {(h,)i,j} where (h is the Number of the MultiPolygon-Part,) i is the ring number (1 is outer; inner rings follow) and j is the coordinate position in the ring. 
+			, (ST_DumpPoints(geom)).path path_point 											-- For a (Multi-)POLYGON the paths are {(h,)i,j} where (h is the Number of the MultiPolygon-Part,) i is the ring number (1 is outer; inner rings follow) and j is the coordinate position in the ring. 
 			, (ST_DumpPoints(geom)).geom geom_point 	
 			FROM rrp ) 
 		SELECT dumped_points.id , dumped_points.typ , dumped_points.path_point , dumped_points.geom_point , 
 			   t1.id id_t1 , t1.typ	typ_t1 , t1.path_point path_point_t1 , t1.geom_point geom_point_t1 ,  
-			   t2.id id_t2 , t2.typ typ_t2 , t2.path_point path_point_t2 , t2.geom_point geom_point_t2 
-			-- Identische Punkte ggü-stellen 						--> t1.path_point enthält StartPunkt, t2.path_point enthält die EndPunkt jedes Polygons 
+			   t2.id id_t2 , t2.typ typ_t2 , t2.path_point path_point_t2 , t2.geom_point geom_point_t2 					--> t1.path_point enthält StartPunkt, t2.path_point enthält die EndPunkt jedes Polygons 
+			-- Identische Punkte ggü-stellen 
 			FROM dumped_points t1 
 			INNER JOIN dumped_points t2 
-				ON t1.id = t2.id 								-- Nur jeweils ein Polygon betrachten 
-					AND t1.path_point < t2.path_point  			-- Start-&End-Punkt nicht 2mal pro Polygon ggü-stellen 
-					--AND ST_Equals(t1.geom_point, t2.geom_point) -- 6 
-					AND t1.geom_point = t2.geom_point			-- 6   ;   SAME as ST_Equals 
+				ON t1.id = t2.id 											-- Nur jeweils ein Polygon betrachten 
+					AND t1.path_point < t2.path_point  								-- Start-&End-Punkt nicht 2mal pro Polygon ggü-stellen 
+					--AND ST_Equals(t1.geom_point, t2.geom_point)						-- 6 
+					AND t1.geom_point = t2.geom_point							-- 6   ;   SAME as ST_Equals 
 			-- End-Punkte allen Punkten ggü-stellen 
 			RIGHT JOIN dumped_points 
-				ON dumped_points.id = t2.id AND dumped_points.path_point = t2.path_point 	-- 34 --> Alle Polygon-bildenden Punkte 
-			WHERE t2.id IS NULL ; 															-- 28 --> ohne EndPunkte --> 34 dumped_points -6 End-Punkte = 28 
+				ON dumped_points.id = t2.id AND dumped_points.path_point = t2.path_point 			-- 34 --> Alle Polygon-bildenden Punkte 
+			WHERE t2.id IS NULL ; 											-- 28 --> ohne EndPunkte --> 34 dumped_points -6 End-Punkte = 28 
 
