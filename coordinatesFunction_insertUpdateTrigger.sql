@@ -1,7 +1,7 @@
 
 -- FUNCTION
 
--- Funktion, die als Parameter den Namen einer Stadt bekommt und die X- und Y-Koordinate ausgibt 
+-- Funktion, die als Parameter den Namen einer Stadt bekommt und die X- und Y-Koordinate ausgibt
 CREATE OR REPLACE FUNCTION koordinatenAusgeben(stadt character)    		-- or 'text'
 RETURNS text                           						-- or 'character'
 AS 
