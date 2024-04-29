@@ -26,8 +26,8 @@ FROM import_shp2p.fb_extrahiert_1_shp2p
 LEFT JOIN 
 	(-- Flächen kleiner als der Durchschnitt der Flächen der Ackerlandfeldblöcke 
 		SELECT
-			area_qm AS beavg_a_fb_al, 									-- below average 
-			--avg_a_fb_al,												-- average 
+			area_qm AS beavg_a_fb_al, 							-- below average 
+			--avg_a_fb_al,									-- average 
 			fb_id
 		FROM 
 			(	
@@ -49,8 +49,8 @@ ON import_shp2p.fb_extrahiert_1_shp2p.fb_id = iii_2_1.fb_id
 LEFT JOIN 
 	(-- Flächen größer als der Durchschnitt der Flächen der Ackerlandfeldblöcke 	
 		SELECT
-			area_qm AS abavg_a_fb_al, 									-- above average
-			--avg_a_fb_al, 												-- average 
+			area_qm AS abavg_a_fb_al, 							-- above average
+			--avg_a_fb_al, 									-- average 
 			fb_id
 		FROM 
 			(	
